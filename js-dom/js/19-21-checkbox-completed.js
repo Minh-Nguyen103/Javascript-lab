@@ -1,4 +1,37 @@
-function createTodoElement(todo) {
+function isMatchSearchTerm(liElement, searchTerm) {
+  if (!liElement) return false;
+
+  //search is empty -> show all
+  //searchTerm !== empty > filter todo
+
+  if (searchTerm === '') return true;
+
+  const titleElement = liElement.querySelector('p.todo__title');
+  if (!titleElement) return false;
+
+  return titleElement.textContent.toLowerCase().includes(searchTerm.toLowerCase());
+}
+
+function isMatchFilterStatus(liElement, filterStatus) {
+  return filterStatus === 'all' || liElement.dataset.status === filterStatus;
+}
+
+function isMatch(liElement, params) {
+  return (
+    isMatchSearchTerm(liElement, params.get('searchTerm')) &&
+    isMatchFilterStatus(liElement, params.get('status'))
+  );
+}
+
+function checkParams(liElement, params) {
+  if (!params.get('searchTerm')) {
+    return isMatchFilterStatus(liElement, params.get('status'));
+  }
+
+  return isMatch(liElement, params);
+}
+
+function createTodoElement(todo, params) {
   if (!todo) return null;
 
   //find template
@@ -21,6 +54,12 @@ function createTodoElement(todo) {
   //update content where needed
   const titleElement = todoElement.querySelector('.todo__title');
   if (titleElement) titleElement.textContent = todo.title;
+
+  if (!params.toString()) {
+    todoElement.hidden = false;
+  } else {
+    todoElement.hidden = !checkParams(todoElement, params);
+  }
 
   //render style for button
   const newText = todo.status === 'pending' ? 'Finish' : 'Reset';
@@ -123,7 +162,7 @@ function populateTodoForm(todo) {
   todoStatus.checked = currentStatus;
 }
 
-function renderTodoList(todoList, ulElementId) {
+function renderTodoList(todoList, ulElementId, params) {
   if (!Array.isArray(todoList) || todoList.length === 0) return;
 
   //find ul element
@@ -135,7 +174,7 @@ function renderTodoList(todoList, ulElementId) {
   if (!ulElementId) return;
 
   for (const todo of todoList) {
-    const liElement = createTodoElement(todo);
+    const liElement = createTodoElement(todo, params);
     ulElement.appendChild(liElement);
   }
 }
@@ -263,10 +302,11 @@ function createTodoId() {
   //   { id: 2, title: 'ReactJs', status: 'completed' },
   //   { id: 3, title: 'NextJs', status: 'pending' },
   // ];
+  const params = new URLSearchParams(window.location.search);
 
   const todoList = getTodoList();
 
-  renderTodoList(todoList, 'todoList');
+  renderTodoList(todoList, 'todoList', params);
 
   //register submit event for todo form
   const todoForm = document.getElementById('todoFormId');

@@ -34,10 +34,19 @@
     <section class="my-4">
         <div class="container">
           <h1>Todo List</h1>
+
           <div class="input-group mb-3">
             <span class="input-group-text" id="searchTermSpan">Search</span>
             <input id="searchTerm" type="text" class="form-control" aria-label="Username" aria-describedby="searchTermSpan">
           </div>
+
+          <select id="filterStatus" class="form-select mb-3" aria-label="Default select example">
+              <option selected value="all">All</option>
+            <option value="pending">Pending</option>
+            <option value="completed">Completed</option>
+          </select>
+
+
           <ul id="todoList" class="todo-list">
                 
           </ul>
@@ -71,7 +80,7 @@
       </template>
 
     <script src="./js/19-21-checkbox-completed.js"></script>
-    <script src="./js/19-22-search-todo.js"></script>
+    <script src="./js/19-24-persist-filter.js"></script>
 
 
     <script

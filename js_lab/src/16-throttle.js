@@ -25,10 +25,3 @@ throttleLog();
 throttleLog();
 
 setTimeout(throttleLog, 400);
-
-const a = {
-  name: 'Minh',
-  name2: this,
-};
-
-console.log(a);

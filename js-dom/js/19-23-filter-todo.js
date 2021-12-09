@@ -42,7 +42,29 @@ function initSearchInput() {
   });
 }
 
+function filterTodo(filterStatus) {
+  const todoElementList = getAllTodoElements();
+
+  for (const todoElement of todoElementList) {
+    const needToShow = filterStatus === 'all' || todoElement.dataset.status === filterStatus;
+
+    todoElement.hidden = !needToShow;
+  }
+}
+
+function initFilterStatus() {
+  //find select
+  const filterStatusSelect = document.getElementById('filterStatus');
+  if (!filterStatusSelect) return;
+
+  //attach event change
+  filterStatusSelect.addEventListener('change', () => {
+    filterTodo(filterStatusSelect.value);
+  });
+}
+
 //MAIN
 (() => {
   initSearchInput();
+  initFilterStatus();
 })();
